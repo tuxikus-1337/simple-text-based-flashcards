@@ -1,3 +1,5 @@
+import os, sys
+
 class Question:
     question_string = ""
     answer_string = ""
@@ -48,17 +50,44 @@ class Parser:
 
         return questions 
 
+def get_file_from_arg():
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    else:
+        return ""
+
+
 def main():
     parser = Parser()
 
-    flashcards_file = open("sample.flashcards", "r")
+    file = get_file_from_arg()
+
+    if file == "":
+        print("No input file")
+        return
+
+    flashcards_file = open(file, "r")
     flashcards_file_content = flashcards_file.read()
     flashcards_file.close()
 
     questions = parser.parse_flashcards_file_string(flashcards_file_content)
-    
+
+    os.system("clear")
+
     for q in questions:
-        q.to_string()
+        print(q.question_string)
+        user_input = input("Press ENTER to show the answer OR type quit + ENTER to quit the application : ")
+
+        if user_input == "quit":
+            return
+
+        print(q.answer_string) 
+        user_input = input("Press ENTER to get the next question OR type quit + ENTER to quit the application : ")
+
+        if user_input == "quit":
+            return
+
+        os.system("clear")
     
 
 if __name__ == "__main__":
